@@ -5,9 +5,9 @@
   --bg: #f4f7f2;
   --surface: #ffffff;
   --text: #2b332c;
-  --text-muted: #6b7368;
+  --text-muted: #5b6558;
   --accent: #bed35a;
-  --accent-dark: #9bb33e;
+  --accent-dark: #5f7a1f;
   --accent-tint: #d9e4d2;
   --border: #dee5d9;
   --radius: 6px;
@@ -26,7 +26,6 @@ body {
   font-family: Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  text-align: center;
 }
 
 /* Картинки */
@@ -60,7 +59,12 @@ h3 {
   outline-offset: 2px;
 }
 
-/* Шапка — на всю ширину экрана, лёгкий зелёный фон */
+/* Отступ при переходе по якорям под липкой шапкой */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* Шапка */
 .site-header {
   display: flex;
   flex-wrap: wrap;
@@ -109,7 +113,7 @@ h3 {
   text-decoration: none;
 }
 
-/* Основной контейнер — центрируем содержимое */
+/* Основной контейнер */
 main {
   max-width: 1180px;
   margin: 0 auto;
@@ -127,6 +131,14 @@ main {
   border-radius: var(--radius);
   padding: 2rem 2rem;
   margin: 1.5rem 0;
+}
+
+/* Заголовки секций по центру */
+.hero,
+.filters,
+.breeds,
+.about {
+  text-align: center;
 }
 
 /* Первый блок с заголовком */
@@ -242,6 +254,7 @@ main {
 
 .btn:hover {
   background-color: var(--accent-dark);
+  color: #ffffff;
 }
 
 /* Блок с карточками */
@@ -250,7 +263,7 @@ main {
   font-size: 1.5rem;
 }
 
-/* Сетка карточек пород */
+/* Сетка карточек пород — CSS Grid */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -270,7 +283,7 @@ main {
 }
 
 .card:hover {
-  box-shadow: 0 6px 20px rgba(190, 211, 90, 0.65); /* зелёная тень */
+  box-shadow: 0 6px 20px rgba(95, 122, 31, 0.25);
   transform: translateY(-2px);
 }
 
@@ -294,7 +307,7 @@ main {
   color: var(--text-muted);
 }
 
-/* Список свойств в карточке — характеристики пород по левому краю */
+/* Список свойств в карточке */
 .card-props {
   margin: auto 0 0;
   padding: 0.75rem 0 0;
@@ -397,7 +410,7 @@ main {
   color: var(--text-muted);
 }
 
-/* Подвал — на всю ширину экрана, лёгкий зелёный фон */
+/* Подвал */
 .site-footer {
   display: flex;
   flex-wrap: wrap;
