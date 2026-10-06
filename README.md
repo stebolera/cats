@@ -17,6 +17,7 @@
 сравнить породы перед покупкой котёнка.
 
 ## Структура проекта
+```text
 web-project/
 ├── index.html
 ├── styles/
@@ -32,7 +33,7 @@ web-project/
 │ ├── abyssinian.jpg
 │ └── persian.jpg
 └── README.md
-
+```
 
 ## Основные блоки страницы
 

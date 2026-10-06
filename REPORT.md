@@ -27,6 +27,7 @@
 ---
 
 ## 3. Структура проекта
+```text
 web-project/
 ├── index.html
 ├── styles/
@@ -43,6 +44,7 @@ web-project/
 │ └── persian.jpg
 ├── README.md
 └── REPORT.md
+```
 
 ---
 
