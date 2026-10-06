@@ -1,0 +1,487 @@
+/* Котолог — каталог пород кошек */
+
+/* Цвета и размеры */
+:root {
+  --bg: #f4f7f2;
+  --surface: #ffffff;
+  --text: #2b332c;
+  --text-muted: #6b7368;
+  --accent: #bed35a;
+  --accent-dark: #9bb33e;
+  --accent-tint: #d9e4d2;
+  --border: #dee5d9;
+  --radius: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Основа страницы */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Картинки */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* Ссылки */
+a {
+  color: var(--accent-dark);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Заголовки */
+h1,
+h2,
+h3 {
+  font-family: Georgia, serif;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Рамка при навигации клавишей Tab */
+:focus-visible {
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 2px;
+}
+
+/* Шапка — на всю ширину экрана, лёгкий зелёный фон */
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem 2rem;
+  padding: 1.25rem max(2rem, calc((100% - 1180px) / 2));
+  background-color: var(--accent-tint);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Логотип */
+.logo {
+  font-family: Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+/* Меню */
+.main-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.main-nav a {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.main-nav a:hover {
+  color: var(--accent-dark);
+  text-decoration: none;
+}
+
+/* Основной контейнер — центрируем содержимое */
+main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Белый блок-обёртка для секций */
+.hero,
+.filters,
+.breeds,
+.text-block,
+.about {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 2rem;
+  margin: 1.5rem 0;
+}
+
+/* Первый блок с заголовком */
+.hero {
+  padding: 3rem 2rem;
+}
+
+.hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2.1rem;
+  line-height: 1.2;
+}
+
+.hero p {
+  margin: 0 auto;
+  max-width: 60ch;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+/* Блок с формой */
+.filters h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+}
+
+.filters p {
+  margin: 0 auto 1.5rem;
+  max-width: 65ch;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1rem 1.5rem;
+  padding: 1.5rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* Одно поле формы */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1 1 180px;
+  text-align: center;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.form-field input[type="text"],
+.form-field input[type="number"],
+.form-field select {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  font-family: Arial, sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--accent);
+}
+
+/* Поле с галочкой */
+.form-field--checkbox {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 100%;
+  text-align: center;
+}
+
+.form-field--checkbox input {
+  width: auto;
+}
+
+.form-field--checkbox label {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+/* Кнопка */
+.btn {
+  padding: 0.55rem 1.75rem;
+  font-family: Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  background-color: var(--accent);
+  border: 1px solid var(--accent-dark);
+  border-radius: var(--radius);
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
+}
+
+.btn:hover {
+  background-color: var(--accent-dark);
+}
+
+/* Блок с карточками */
+.breeds h2 {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* Сетка карточек пород */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Одна карточка */
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  text-align: center;
+}
+
+.card:hover {
+  box-shadow: 0 6px 20px rgba(190, 211, 90, 0.65); /* зелёная тень */
+  transform: translateY(-2px);
+}
+
+.card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: #e9eee6;
+  margin-bottom: 0.9rem;
+}
+
+.card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.15rem;
+}
+
+.card p {
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Список свойств в карточке — характеристики пород по левому краю */
+.card-props {
+  margin: auto 0 0;
+  padding: 0.75rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.card-props li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+}
+
+.card-props span {
+  color: var(--text-muted);
+}
+
+/* Текстовые блоки */
+.text-block h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.text-block-content {
+  max-width: 65ch;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.text-block-content p {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.text-block-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* FAQ — 4 блока в ряд */
+.faq {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.faq-item {
+  padding: 1.25rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.faq-item h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+}
+
+.faq-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Блок «Как выбрать» */
+.about h2 {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* «Как выбрать» — 4 блока в ряд */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.about-grid article {
+  padding: 1rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.about-grid h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.about-grid p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Подвал — на всю ширину экрана, лёгкий зелёный фон */
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem max(2rem, calc((100% - 1180px) / 2)) 3rem;
+  margin-top: 2rem;
+  background-color: var(--accent-tint);
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.footer-col {
+  flex: 1 1 200px;
+}
+
+.footer-col p {
+  margin: 0 0 0.35rem;
+}
+
+.footer-brand {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+/* Планшет: FAQ и «Как выбрать» — по 2 в ряд */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .faq,
+  .about-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Телефон: всё в одну колонку */
+@media (max-width: 480px) {
+  main {
+    padding: 0 1.25rem;
+  }
+
+  .site-header,
+  .site-footer {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .hero,
+  .filters,
+  .breeds,
+  .text-block,
+  .about {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .main-nav ul {
+    gap: 1rem;
+  }
+
+  .btn {
+    flex: 1 1 100%;
+  }
+
+  .cards,
+  .faq,
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Широкий экран: карточки пород — по 3 в ряд */
+@media (min-width: 1025px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

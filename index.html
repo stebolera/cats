@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Котолог — каталог пород кошек</title>
+  <link rel="stylesheet" href="styles/main.css">
+<base target="_blank">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <a class="logo" href="index.html">Котолог</a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <ul>
+        <li><a href="#breeds">Каталог</a></li>
+        <li><a href="#filters">Подбор</a></li>
+        <li><a href="#about">Как выбрать</a></li>
+        <li><a href="#footer">О проекте</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Котолог — каталог пород кошек</h1>
+      <p>
+        Сравнивайте породы по характеру, размеру, типу шерсти и сложности ухода,
+        чтобы выбрать питомца, который подойдёт именно вам и вашему образу жизни.
+      </p>
+    </section>
+
+    <section id="filters" class="filters" aria-labelledby="filters-title">
+      <h2 id="filters-title">Подбор породы</h2>
+      <p>Заполните поля, чтобы подобрать породу под свои условия.</p>
+
+      <form class="filter-form" action="#" method="get">
+        <div class="form-field">
+          <label for="breed-name">Название породы</label>
+          <input type="text" id="breed-name" name="breed" placeholder="Например, мейн-кун">
+        </div>
+
+        <div class="form-field">
+          <label for="coat">Тип шерсти</label>
+          <select id="coat" name="coat">
+            <option value="">Любая</option>
+            <option value="short">Короткая</option>
+            <option value="semi-long">Полудлинная</option>
+            <option value="long">Длинная</option>
+            <option value="hairless">Без шерсти</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="size">Размер</label>
+          <select id="size" name="size">
+            <option value="">Любой</option>
+            <option value="small">Малый</option>
+            <option value="medium">Средний</option>
+            <option value="large">Крупный</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="max-weight">Максимальный вес, кг</label>
+          <input type="number" id="max-weight" name="max_weight" min="1" max="15" step="0.5" placeholder="Например, 7">
+        </div>
+
+        <div class="form-field form-field--checkbox">
+          <input type="checkbox" id="kids-friendly" name="kids_friendly" value="1">
+          <label for="kids-friendly">Подходит для семей с детьми</label>
+        </div>
+
+        <button type="submit" class="btn">Найти</button>
+      </form>
+    </section>
+
+    <section id="breeds" class="breeds" aria-labelledby="breeds-title">
+      <h2 id="breeds-title">Породы кошек</h2>
+
+      <div class="cards">
+
+        <article class="card">
+          <img src="assets/images/maine-coon.jpg" alt="Мейн-кун — крупная кошка с полудлинной шерстью">
+          <h3>Мейн-кун</h3>
+          <p>Крупная дружелюбная порода с полудлинной шерстью и спокойным характером.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> США</li>
+            <li><span>Размер:</span> крупный</li>
+            <li><span>Вес:</span> 5–9 кг</li>
+            <li><span>Жизнь:</span> 12–15 лет</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <img src="assets/images/british-shorthair.jpg" alt="Британская короткошёрстная кошка с плотной плюшевой шерстью">
+          <h3>Британская короткошёрстная</h3>
+          <p>Плюшевая шерсть, независимый нрав и крепкое здоровье — классика семейного любимца.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> Великобритания</li>
+            <li><span>Размер:</span> средний</li>
+            <li><span>Вес:</span> 4–8 кг</li>
+            <li><span>Жизнь:</span> 12–17 лет</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <img src="assets/images/scottish-fold.jpg" alt="Шотландская вислоухая кошка с характерными сложенными ушками">
+          <h3>Шотландская вислоухая</h3>
+          <p>Спокойная и ласковая порода с узнаваемыми сложенными ушками.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> Шотландия</li>
+            <li><span>Размер:</span> средний</li>
+            <li><span>Вес:</span> 3–6 кг</li>
+            <li><span>Жизнь:</span> 11–14 лет</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <img src="assets/images/siberian.jpg" alt="Сибирская кошка с густой полудлинной шерстью">
+          <h3>Сибирская</h3>
+          <p>Крепкая порода с густой шерстью, ласковым характером и хорошим здоровьем.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> Россия</li>
+            <li><span>Размер:</span> крупный</li>
+            <li><span>Вес:</span> 4–9 кг</li>
+            <li><span>Жизнь:</span> 11–15 лет</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <img src="assets/images/sphynx.jpg" alt="Сфинкс — бесшёрстная кошка с общительным характером">
+          <h3>Сфинкс</h3>
+          <p>Бесшёрстная и очень общительная кошка, требующая регулярного ухода за кожей.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> Канада</li>
+            <li><span>Размер:</span> средний</li>
+            <li><span>Вес:</span> 3–5 кг</li>
+            <li><span>Жизнь:</span> 9–15 лет</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <img src="assets/images/bengal.jpg" alt="Бенгальская кошка с пятнистым окрасом, похожим на леопарда">
+          <h3>Бенгальская</h3>
+          <p>Активная и игривая порода с эффектным «леопардовым» окрасом.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> США</li>
+            <li><span>Размер:</span> средний</li>
+            <li><span>Вес:</span> 4–7 кг</li>
+            <li><span>Жизнь:</span> 12–16 лет</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <img src="assets/images/abyssinian.jpg" alt="Абиссинская кошка с короткой шерстью и характерным тикированным окрасом">
+          <h3>Абиссинская</h3>
+          <p>Игривая и любопытная кошка с короткой шерстью и «диким» окрасом.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> Эфиопия</li>
+            <li><span>Размер:</span> средний</li>
+            <li><span>Вес:</span> 3–5 кг</li>
+            <li><span>Жизнь:</span> 12–15 лет</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <img src="assets/images/persian.jpg" alt="Персидская кошка с длинной пушистой шерстью и плоской мордочкой">
+          <h3>Персидская</h3>
+          <p>Роскошная длинная шерсть и спокойный нрав, но требует ежедневного вычёсывания.</p>
+          <ul class="card-props">
+            <li><span>Страна:</span> Иран</li>
+            <li><span>Размер:</span> средний</li>
+            <li><span>Вес:</span> 3–6 кг</li>
+            <li><span>Жизнь:</span> 10–17 лет</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="about-breeds" class="text-block" aria-labelledby="about-breeds-title">
+      <h2 id="about-breeds-title">Что важно знать о породах</h2>
+      <div class="text-block-content">
+        <p>
+          Порода — это не только внешность, но и набор поведенческих особенностей,
+          требований к уходу и предрасположенностей к здоровью. Прежде чем выбрать
+          котёнка, изучите не только фотографии, но и характер, активность и
+          продолжительность жизни будущего питомца.
+        </p>
+        <p>
+          Многие породы выводились для конкретных задач: одним нужна была выносливость,
+          другим — густая шерсть, третьим — общительность. Эти качества до сих пор
+          влияют на поведение кошек и на то, насколько комфортно им будет в вашем доме.
+        </p>
+      </div>
+    </section>
+
+    <section id="care" class="text-block" aria-labelledby="care-title">
+      <h2 id="care-title">Уход и содержание</h2>
+      <div class="text-block-content">
+        <p>
+          Даже неприхотливые породы нуждаются в регулярном внимании: чистая вода,
+          сбалансированное питание, лоток, когтеточка и место для отдыха — это минимум,
+          который должен быть у каждой кошки. Длинношёрстным породам дополнительно
+          требуется вычёсывание, а бесшёрстным — уход за кожей.
+        </p>
+        <p>
+          Не забывайте про профилактические осмотры у ветеринара, вакцинацию и
+          обработку от паразитов. Здоровье питомца во многом зависит от того,
+          насколько ответственно вы подходите к его содержанию с первых дней.
+        </p>
+      </div>
+    </section>
+
+    <section id="about" class="about" aria-labelledby="about-title">
+      <h2 id="about-title">Как выбрать породу</h2>
+
+      <div class="about-grid">
+        <article>
+          <h3>Помните об уходе</h3>
+          <p>Длинношёрстные породы требуют ежедневного вычёсывания, а сфинксов нужно регулярно купать. Честно оцените, сколько времени вы готовы уделять уходу.</p>
+        </article>
+
+        <article>
+          <h3>Учитывайте характер</h3>
+          <p>Активные бенгалы и абиссинцы не подойдут тем, кто редко бывает дома. Спокойные британцы и персы лучше переносят одиночество.</p>
+        </article>
+
+        <article>
+          <h3>Проверьте здоровье</h3>
+          <p>У некоторых пород есть предрасположенность к заболеваниям. Уточняйте у заводчика результаты тестов и условия содержания родителей котёнка.</p>
+        </article>
+
+        <article>
+          <h3>Не забывайте главное</h3>
+          <p>Порода — не гарантия характера. Многое зависит от воспитания, социализации и индивидуальных особенностей конкретного животного.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="text-block" aria-labelledby="faq-title">
+      <h2 id="faq-title">Частые вопросы</h2>
+      <div class="faq">
+        <article class="faq-item">
+          <h3>Какая порода подойдёт новичку?</h3>
+          <p>
+            Для первого питомца хорошо подходят британская короткошёрстная,
+            шотландская вислоухая и сибирская — они неприхотливы в уходе
+            и обладают спокойным характером.
+          </p>
+        </article>
+        <article class="faq-item">
+          <h3>Сколько времени нужно уделять кошке?</h3>
+          <p>
+            В среднем достаточно 20–30 минут активных игр в день и регулярного
+            общения. Активные породы, например бенгальская и абиссинская,
+            требуют больше внимания.
+          </p>
+        </article>
+        <article class="faq-item">
+          <h3>Влияет ли порода на здоровье?</h3>
+          <p>
+            Да, у некоторых пород есть предрасположенность к определённым
+            заболеваниям. Уточняйте у заводчика результаты тестов родителей
+            и узнавайте о типичных проблемах породы заранее.
+          </p>
+        </article>
+        <article class="faq-item">
+          <h3>Можно ли завести кошку в небольшой квартире?</h3>
+          <p>
+            Да, многие породы отлично чувствуют себя в небольших помещениях,
+            если у них есть когтеточка, место для отдыха и достаточно игрушек
+            для активности.
+          </p>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="footer-col">
+      <p class="footer-brand">Котолог</p>
+      <p>Учебный проект — каталог пород кошек. 2026.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
