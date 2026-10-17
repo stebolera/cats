@@ -20,9 +20,9 @@
 /* Цвета и размеры */
 :root {
   /* фон блоков */
-  --surface: #EDDCC1;
+   --surface: rgba(237, 220, 193, 0.7);
   /* фон карточек внутри блоков */
-  --card-bg: #f8f2e8;
+  --card-bg: rgba(248, 242, 232, 0.7);
   --surface-solid: #f5ebdc;
 
   --text: #3d4a2d;
@@ -215,7 +215,9 @@ main {
 
 /* Заглушка под фото */
 .media-placeholder {
-  flex: 0 0 320px;
+  flex: 0 1 320px;
+  width: 100%;
+  max-width: 320px;
   aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;
@@ -231,8 +233,10 @@ main {
 
 /* Реальное фото вместо заглушки */
 .media-photo {
-  flex: 0 0 320px;
-  width: 320px;
+  flex: 0 1 320px;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   object-position: center;
@@ -397,7 +401,7 @@ main {
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   text-align: left;
   animation: card-in 0.25s ease-out;
-  /* лёгкая зелёная тень по умолчанию */
+  /* тень */
   box-shadow: 0 2px 10px rgba(165, 184, 144, 0.45);
 }
 
@@ -496,12 +500,16 @@ main {
 .text-block--media-left .text-block-inner  { flex-direction: row-reverse; }
 
 .text-block-inner .media-placeholder {
-  flex: 0 0 300px;
+  flex: 0 1 300px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .text-block-inner .media-photo {
-  flex: 0 0 300px;
-  width: 300px;
+  flex: 0 1 300px;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
 }
 
 .text-block h2 {
@@ -785,7 +793,9 @@ main {
   .text-block-inner .media-photo {
     flex: none;
     width: 100%;
-    max-width: 420px;
+    max-width: 320px;
+    max-height: 240px;
+    height: auto;
     margin: 0 auto;
   }
 }
@@ -852,6 +862,8 @@ main {
     flex: none;
     width: 100%;
     max-width: 320px;
+    max-height: 240px;
+    height: auto;
     margin: 0 auto;
   }
 

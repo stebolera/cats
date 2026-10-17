@@ -1,5 +1,7 @@
 'use strict';
 
+/* Блок 1. Демонстрационные данные (Default State) */
+
 const DEFAULT_ITEMS = [
   {
     id: 'maine-coon',
@@ -99,8 +101,13 @@ const DEFAULT_ITEMS = [
   }
 ];
 
+/* Ключ, под которым список пород хранится в localStorage */
 const STORAGE_KEY = 'kotolog.items.v1';
 
+
+/* Блок 2. Утилиты */
+
+/* SVG-заглушка через data-URI — если фото нет или оно не загрузилось */
 const PLACEHOLDER_IMAGE =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
@@ -111,6 +118,7 @@ const PLACEHOLDER_IMAGE =
     </svg>`
   );
 
+/* Словари: технический код → русская подпись */
 const SIZE_LABELS = {
   small: 'малый',
   medium: 'средний',
@@ -124,14 +132,20 @@ const COAT_LABELS = {
   hairless: 'без шерсти'
 };
 
+/* Возвращает русскую подпись размера (или исходное значение) */
 function sizeLabel(size) {
   return SIZE_LABELS[size] || size;
 }
 
+/* Возвращает русскую подпись типа шерсти */
 function coatLabel(coat) {
   return COAT_LABELS[coat] || coat;
 }
 
+
+/* Блок 3. State и работа с localStorage */
+
+/* Читает список пород из localStorage; при ошибке — дефолтные данные */
 function loadItemsFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -146,6 +160,7 @@ function loadItemsFromStorage() {
   }
 }
 
+/* Единый объект состояния — источник правды для всего приложения */
 const state = {
   items: loadItemsFromStorage(),
   searchQuery: '',
@@ -154,6 +169,7 @@ const state = {
   sortBy: 'name-asc'
 };
 
+/* Сохраняет state.items в localStorage через JSON.stringify */
 function saveItems() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
@@ -162,9 +178,13 @@ function saveItems() {
   }
 }
 
+
+/* Блок 4. Производные данные: поиск + фильтр + сортировка */
+
 function getVisibleItems() {
   const query = state.searchQuery.trim().toLowerCase();
 
+  /* Фильтрация по поиску (название/страна), размеру и типу шерсти */
   const filtered = state.items.filter(item => {
     const matchesSearch =
       query === '' ||
@@ -180,8 +200,10 @@ function getVisibleItems() {
     return matchesSearch && matchesSize && matchesCoat;
   });
 
+  /* Копия массива */
   const sorted = [...filtered];
 
+  /* Сортировка */
   switch (state.sortBy) {
     case 'name-asc':
       sorted.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
@@ -202,6 +224,8 @@ function getVisibleItems() {
   return sorted;
 }
 
+/* Блок 5. Ссылки на DOM-элементы */
+
 const cardsContainer = document.getElementById('cards');
 const filterCountEl = document.getElementById('filter-count');
 
@@ -221,9 +245,13 @@ const imagePreview = document.getElementById('image-preview');
 const imagePreviewImg = document.getElementById('image-preview-img');
 const imageRemoveBtn = document.getElementById('image-remove');
 
-const MAX_IMAGE_SIZE = 1024 * 1024; // 1 МБ
-let currentImageDataUrl = '';
 
+/* Блок 5.1. Работа с фото в форме */
+
+const MAX_IMAGE_SIZE = 1024 * 1024; // 1 МБ
+let currentImageDataUrl = '';       // сюда кладётся прочитанная картинка
+
+/* Проверяет файл, читает как Data URL и показывает превью */
 function handleImageSelect(file) {
   clearImageError();
 
@@ -262,6 +290,7 @@ function handleImageSelect(file) {
   reader.readAsDataURL(file);
 }
 
+/* Сбрасывает превью и сохранённый Data URL */
 function resetImagePreview() {
   currentImageDataUrl = '';
   imagePreviewImg.removeAttribute('src');
@@ -269,26 +298,34 @@ function resetImagePreview() {
   imageInput.value = '';
 }
 
+/* Снимает ошибку с поля загрузки файла */
 function clearImageError() {
   imageInput.classList.remove('is-invalid');
   const target = form.querySelector('[data-error-for="f-image"]');
   if (target) target.textContent = '';
 }
 
+/* Пользователь выбрал файл */
 imageInput.addEventListener('change', e => {
   const file = e.target.files && e.target.files[0];
   handleImageSelect(file);
 });
 
+/* Кнопка «Удалить фото» */
 imageRemoveBtn.addEventListener('click', () => {
   resetImagePreview();
 });
 
+
+/* Блок 6. Render — отрисовка карточек по state */
+
+/* Создаёт DOM-элемент одной карточки породы */
 function createCardElement(item) {
   const card = document.createElement('article');
   card.className = 'card';
   card.dataset.id = item.id;
 
+  /* Картинка породы (или заглушка при ошибке загрузки) */
   const img = document.createElement('img');
   img.src = item.image || PLACEHOLDER_IMAGE;
   img.alt = item.name;
@@ -298,14 +335,17 @@ function createCardElement(item) {
   });
   card.appendChild(img);
 
+  /* Название */
   const title = document.createElement('h3');
   title.textContent = item.name;
   card.appendChild(title);
 
+  /* Описание */
   const desc = document.createElement('p');
   desc.textContent = item.description;
   card.appendChild(desc);
 
+  /* Список характеристик */
   const props = document.createElement('ul');
   props.className = 'card-props';
 
@@ -328,6 +368,7 @@ function createCardElement(item) {
 
   card.appendChild(props);
 
+  /* Кнопка удаления с data-action="delete" — её ловит делегирование */
   const deleteBtn = document.createElement('button');
   deleteBtn.type = 'button';
   deleteBtn.className = 'card__delete';
@@ -338,10 +379,10 @@ function createCardElement(item) {
   return card;
 }
 
+/* Полная перерисовка контейнера карточек по актуальному state */
 function render() {
   const items = getVisibleItems();
 
-  // Полная перерисовка контейнера
   cardsContainer.textContent = '';
 
   if (items.length === 0) {
@@ -353,12 +394,13 @@ function render() {
         : 'Ничего не найдено. Попробуйте изменить условия поиска.';
     cardsContainer.appendChild(empty);
   } else {
+    /* Карточки собираем в фрагмент — вставляем в DOM одним движением */
     const fragment = document.createDocumentFragment();
     items.forEach(item => fragment.appendChild(createCardElement(item)));
     cardsContainer.appendChild(fragment);
   }
 
-  // Счётчик найденного
+  /* Счётчик найденного */
   const total = state.items.length;
   const shown = items.length;
   filterCountEl.textContent =
@@ -366,6 +408,9 @@ function render() {
       ? `Показано пород: ${shown}`
       : `Найдено: ${shown} из ${total}`;
 }
+
+
+/* Блок 7. Обработчики поиска, фильтров, сортировки, сброса */
 
 searchInput.addEventListener('input', e => {
   state.searchQuery = e.target.value;
@@ -387,6 +432,7 @@ sortSelect.addEventListener('change', e => {
   render();
 });
 
+/* Сброс всех фильтров к значениям по умолчанию */
 resetButton.addEventListener('click', () => {
   state.searchQuery = '';
   state.selectedSize = 'all';
@@ -400,6 +446,9 @@ resetButton.addEventListener('click', () => {
 
   render();
 });
+
+
+/* Блок 8. Удаление */
 
 cardsContainer.addEventListener('click', e => {
   const deleteBtn = e.target.closest('[data-action="delete"]');
@@ -415,13 +464,16 @@ cardsContainer.addEventListener('click', e => {
 
   if (!window.confirm(`Удалить «${item.name}» из каталога?`)) return;
 
-
+  /* Иммутабельное удаление: новый массив без удаляемой породы */
   state.items = state.items.filter(i => i.id !== id);
   saveItems();
   render();
 });
 
 
+/* Блок 9. Модальное окно: открытие и закрытие */
+
+/* Запоминаем, куда вернуть фокус после закрытия */
 let lastFocusedElement = null;
 
 function openModal() {
@@ -443,17 +495,23 @@ function closeModal() {
   }
 }
 
+/* Кнопка «Добавить новую породу» */
 addButton.addEventListener('click', openModal);
 
+/* Делегирование: клик по элементу с data-close закрывает модалку */
 modal.addEventListener('click', e => {
   if (e.target.closest('[data-close]')) closeModal();
 });
 
+/* Escape закрывает модалку, если она открыта */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !modal.hidden) closeModal();
 });
 
 
+/* Блок 10. Клиентская валидация формы */
+
+/* Убирает все сообщения об ошибках и красные подсветки */
 function clearErrors() {
   form.querySelectorAll('.error').forEach(el => {
     el.textContent = '';
@@ -463,12 +521,14 @@ function clearErrors() {
   });
 }
 
+/* Показывает ошибку у конкретного поля */
 function showError(input, message) {
   input.classList.add('is-invalid');
   const target = form.querySelector(`[data-error-for="${input.id}"]`);
   if (target) target.textContent = message;
 }
 
+/* Проверяет одно поле через input.validity */
 function validateField(input) {
   if (input.validity.valid) return true;
 
@@ -493,6 +553,7 @@ function validateField(input) {
   return false;
 }
 
+/* Проверяет всю форму; true — если все поля валидны */
 function validateForm() {
   clearErrors();
   let valid = true;
@@ -507,7 +568,7 @@ function validateForm() {
   return valid;
 }
 
-// Снимаем ошибку при исправлении
+/* Снимаем ошибку, как только пользователь исправил поле */
 form.addEventListener('input', e => {
   const input = e.target;
   if (!input.classList.contains('is-invalid')) return;
@@ -519,6 +580,8 @@ form.addEventListener('input', e => {
 });
 
 
+/* Блок 11. Отправка формы — добавление новой породы */
+
 form.addEventListener('submit', e => {
   e.preventDefault();
 
@@ -526,6 +589,7 @@ form.addEventListener('submit', e => {
 
   const data = new FormData(form);
 
+  /* Собираем объект новой породы из данных формы */
   const newItem = {
     id: 'breed-' + Date.now(),
     name: String(data.get('name')).trim(),
@@ -539,17 +603,21 @@ form.addEventListener('submit', e => {
     image: currentImageDataUrl || PLACEHOLDER_IMAGE
   };
 
+  /* Иммутабельное добавление в начало массива */
   state.items = [newItem, ...state.items];
   saveItems();
   render();
   closeModal();
 
-  // Прокручиваем к карточкам, чтобы пользователь увидел результат
+  /* Прокручиваем к карточкам, чтобы пользователь увидел результат */
   const breedsSection = document.getElementById('breeds');
   if (breedsSection) {
     breedsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 });
+
+
+/* Блок 12. Scroll-spy — подсветка активного пункта меню */
 
 (function initScrollSpy() {
   const links = Array.from(document.querySelectorAll('.main-nav a[href^="#"]'));
@@ -559,6 +627,7 @@ form.addEventListener('submit', e => {
 
   if (sections.length === 0) return;
 
+  /* Определяет текущую секцию и ставит .is-active на нужную ссылку */
   function setActive() {
     const probe = window.scrollY + 140;
     let current = sections[0];
@@ -579,5 +648,8 @@ form.addEventListener('submit', e => {
   window.addEventListener('load', setActive);
   setActive();
 })();
+
+
+/* Блок 13. Первая отрисовка при загрузке страницы */
 
 render();
