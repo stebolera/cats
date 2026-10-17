@@ -83,27 +83,27 @@ web-project/
 
 ### 5.1. Главная страница при ширине 1280 px
 
-![Главная страница, 1280 px](assets/report/desktop-1280.png)
+![Главная страница, 1280 px](report/desktop-1280.png)
 
 ### 5.2. Страница при ширине 768 px
 
-![Страница, 768 px](assets/report/tablet-768.png)
+![Страница, 768 px](report/tablet-768.png)
 
 ### 5.3. Страница при ширине 360 px
 
-![Страница, 360 px](assets/report/mobile-360.png)
+![Страница, 360 px](report/mobile-360.png)
 
 ### 5.4. Фильтр пород
 
-![Фильтр](assets/report/filter.png)
+![Фильтр](report/filter.png)
 
 ### 5.5. Карточки пород
 
-![Карточки пород](assets/report/cards.png)
+![Карточки пород](report/cards.png)
 
 ### 5.6. Карточки с информацией о выборе пород
 
-![Информация](assets/report/about.png)
+![Информация](report/about.png)
 
 ---
 

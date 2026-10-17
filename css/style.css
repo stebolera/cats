@@ -1,0 +1,869 @@
+/* Котолог — каталог пород кошек (лабораторная работа №2) */
+
+/* Шрифты */
+@font-face {
+  font-family: 'Lighthaus';
+  src: url('../assets/fonts/Lighthaus.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AA Stetica';
+  src: url('../assets/fonts/AA Stetica Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Цвета и размеры */
+:root {
+  /* фон блоков */
+  --surface: #EDDCC1;
+  /* фон карточек внутри блоков */
+  --card-bg: #f8f2e8;
+  --surface-solid: #f5ebdc;
+
+  --text: #3d4a2d;
+  --text-muted: #6b7d55;
+
+  --accent: #a5b890;
+  --accent-dark: #6b7d55;
+  --accent-darker: #4a5738;
+
+  --danger: #b04a3a;
+
+  --border: rgba(107, 125, 85, 0.25);
+
+  --radius: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Основа страницы */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #ffffff;
+  background-image: url('../assets/images/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'AA Stetica', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--accent-dark);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Lighthaus', Georgia, serif;
+  font-weight: normal;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 2px;
+}
+
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* Шапка */
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem 2rem;
+  padding: 1.25rem max(2rem, calc((100% - 1180px) / 2));
+  background-color: rgba(165, 184, 144, 0.4);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-family: 'Lighthaus', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: var(--text);
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+/* Меню навигации */
+.main-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.main-nav a {
+  display: inline-block;
+  padding: 0.45rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.main-nav a:hover {
+  color: var(--accent-darker);
+  background-color: var(--surface-solid);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.main-nav a:active {
+  background-color: var(--accent-darker);
+  color: #ffffff;
+  border-color: var(--accent-darker);
+}
+
+.main-nav a.is-active {
+  background-color: var(--accent-dark);
+  color: #ffffff;
+  border-color: var(--accent-darker);
+}
+
+/* Основной контейнер */
+main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Полупрозрачные блоки */
+.hero,
+.filters,
+.breeds,
+.text-block,
+.about {
+  background-color: var(--surface);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+/* Hero */
+.hero {
+  padding: 3rem 2rem;
+}
+
+.hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.hero-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2.4rem;
+  line-height: 1.2;
+}
+
+.hero p {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+/* Заглушка под фото */
+.media-placeholder {
+  flex: 0 0 320px;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(165, 184, 144, 0.15);
+  border: 1px dashed var(--accent-dark);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Реальное фото вместо заглушки */
+.media-photo {
+  flex: 0 0 320px;
+  width: 320px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: block;
+}
+
+/* Фильтры */
+.filters h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.7rem;
+}
+
+.filters p {
+  margin: 0 0 1.5rem;
+  max-width: 65ch;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 1rem 1.5rem;
+  padding: 1.5rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.filter-actions {
+  flex: 1 1 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1 1 180px;
+  text-align: left;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.form-field input[type="text"],
+.form-field input[type="number"],
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text);
+  background-color: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--accent-dark);
+  outline: none;
+}
+
+.form-field--checkbox {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 100%;
+}
+
+.form-field--checkbox input {
+  width: auto;
+  accent-color: var(--accent-dark);
+}
+
+.form-field--checkbox label {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+/* Кнопка */
+.btn {
+  padding: 0.55rem 1.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: #ffffff;
+  background-color: var(--accent);
+  border: 1px solid var(--accent-dark);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--accent-dark);
+  border-color: var(--accent-darker);
+}
+
+.btn:active {
+  background-color: var(--accent-darker);
+  border-color: var(--accent-darker);
+}
+
+.btn--ghost {
+  background-color: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn--ghost:hover {
+  background-color: var(--surface-solid);
+  color: var(--accent-darker);
+  border-color: var(--accent-dark);
+}
+
+/* Счётчик найденного */
+.filter-count {
+  margin: 1rem 0 0 !important;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Блок с карточками */
+.breeds h2 {
+  margin: 0 0 1.5rem;
+  font-size: 1.7rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Карточка породы */
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  text-align: left;
+  animation: card-in 0.25s ease-out;
+  /* лёгкая зелёная тень по умолчанию */
+  box-shadow: 0 2px 10px rgba(165, 184, 144, 0.45);
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(165, 184, 144, 0.75);
+  transform: translateY(-2px);
+}
+
+.card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: #e3e6d5;
+  margin-bottom: 0.9rem;
+}
+
+.card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.3rem;
+}
+
+.card p {
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.card-props {
+  margin: auto 0 0;
+  padding: 0.75rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.card-props li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+}
+
+.card-props span {
+  color: var(--text-muted);
+}
+
+.card__delete {
+  align-self: flex-end;
+  margin-top: 0.75rem;
+  padding: 0.2rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--accent-dark);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.card__delete:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Пустое состояние */
+.empty {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  background-color: var(--card-bg);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+/* Текстовые блоки с фото */
+.text-block-inner {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.text-block-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.text-block--media-right .text-block-inner { flex-direction: row; }
+.text-block--media-left .text-block-inner  { flex-direction: row-reverse; }
+
+.text-block-inner .media-placeholder {
+  flex: 0 0 300px;
+}
+
+.text-block-inner .media-photo {
+  flex: 0 0 300px;
+  width: 300px;
+}
+
+.text-block h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.7rem;
+  text-align: left;
+}
+
+.text-block-text p {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.text-block-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* FAQ */
+.faq {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.text-block--faq h2 {
+  text-align: center;
+}
+
+.faq-item {
+  padding: 1.25rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: left;
+}
+
+.faq-item h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.faq-item p {
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--accent-dark);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* «Как выбрать» */
+.about h2 {
+  margin: 0 0 1.5rem;
+  font-size: 1.7rem;
+  text-align: center;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.about-grid article {
+  padding: 1rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.about-grid h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.about-grid p {
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--accent-dark);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Подвал */
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 2rem;
+  padding: 2rem max(2rem, calc((100% - 1180px) / 2)) 3rem;
+  margin-top: 2rem;
+  background-color: rgba(165, 184, 144, 0.4);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0);
+  text-align: left;
+}
+
+.footer-col {
+  flex: 1 1 200px;
+}
+
+.footer-col p {
+  margin: 0 0 0.35rem;
+}
+
+.footer-brand {
+  font-family: 'Lighthaus', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+/* Модальное окно */
+.modal[hidden] {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  animation: fade-in 0.2s ease-out;
+}
+
+.modal__dialog {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  animation: modal-in 0.2s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  padding: 0;
+  font-family: inherit;
+  font-size: 1.6rem;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.modal__close:hover {
+  color: var(--danger);
+}
+
+.modal__dialog h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.5rem;
+}
+
+.modal__dialog .form-field {
+  margin-bottom: 0.75rem;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+/* Ошибки формы */
+.error {
+  display: block;
+  min-height: 1em;
+  font-size: 0.8rem;
+  color: var(--danger);
+}
+
+.form-field input.is-invalid,
+.form-field select.is-invalid,
+.form-field textarea.is-invalid {
+  border-color: var(--danger);
+  background-color: rgba(176, 74, 58, 0.05);
+}
+
+/* Превью загруженного фото */
+.form-field input[type="file"] {
+  padding: 0.4rem;
+  font-size: 0.9rem;
+  background-color: var(--card-bg);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.image-preview {
+  margin-top: 0.6rem;
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.image-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 180px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.image-preview__remove {
+  display: block;
+  margin-top: 0.4rem;
+  padding: 0.25rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.image-preview__remove:hover {
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+/* Планшет */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .faq,
+  .about-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-inner,
+  .text-block-inner,
+  .text-block--media-left .text-block-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-inner .media-placeholder,
+  .text-block-inner .media-placeholder,
+  .hero-inner .media-photo,
+  .text-block-inner .media-photo {
+    flex: none;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+/* Телефон */
+@media (max-width: 480px) {
+  main {
+    padding: 0 1.25rem;
+  }
+
+  .site-header,
+  .site-footer {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .hero,
+  .filters,
+  .breeds,
+  .text-block,
+  .about {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .hero h1 {
+    font-size: 1.9rem;
+  }
+
+  .main-nav ul {
+    gap: 0.35rem;
+  }
+
+  .main-nav a {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.9rem;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-actions .btn {
+    width: 100%;
+  }
+
+  .cards,
+  .faq,
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-inner,
+  .text-block-inner,
+  .text-block--media-left .text-block-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-inner .media-placeholder,
+  .text-block-inner .media-placeholder,
+  .hero-inner .media-photo,
+  .text-block-inner .media-photo {
+    flex: none;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .faq-item p,
+  .about-grid p {
+    text-align: left;
+  }
+}
+
+/* Широкий экран */
+@media (min-width: 1025px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
