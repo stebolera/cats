@@ -1,113 +1,9 @@
 'use strict';
+const API_URL = 'http://127.0.0.1:8000/api/breeds';
 
-/* Блок 1. Демонстрационные данные (Default State) */
+/* Блок 1. Утилиты */
 
-const DEFAULT_ITEMS = [
-  {
-    id: 'maine-coon',
-    name: 'Мейн-кун',
-    country: 'США',
-    size: 'large',
-    coat: 'semi-long',
-    weightMax: 9,
-    lifespan: '12–15 лет',
-    description: 'Крупная дружелюбная порода с полудлинной шерстью и спокойным характером.',
-    kidsFriendly: true,
-    image: 'assets/images/maine-coon.jpg'
-  },
-  {
-    id: 'british-shorthair',
-    name: 'Британская короткошёрстная',
-    country: 'Великобритания',
-    size: 'medium',
-    coat: 'short',
-    weightMax: 8,
-    lifespan: '12–17 лет',
-    description: 'Плюшевая шерсть, независимый нрав и крепкое здоровье — классика семейного любимца.',
-    kidsFriendly: true,
-    image: 'assets/images/british-shorthair.jpg'
-  },
-  {
-    id: 'scottish-fold',
-    name: 'Шотландская вислоухая',
-    country: 'Шотландия',
-    size: 'medium',
-    coat: 'short',
-    weightMax: 6,
-    lifespan: '11–14 лет',
-    description: 'Спокойная и ласковая порода с узнаваемыми сложенными ушками.',
-    kidsFriendly: true,
-    image: 'assets/images/scottish-fold.jpg'
-  },
-  {
-    id: 'siberian',
-    name: 'Сибирская',
-    country: 'Россия',
-    size: 'large',
-    coat: 'semi-long',
-    weightMax: 9,
-    lifespan: '11–15 лет',
-    description: 'Крепкая порода с густой шерстью, ласковым характером и хорошим здоровьем.',
-    kidsFriendly: true,
-    image: 'assets/images/siberian.jpg'
-  },
-  {
-    id: 'sphynx',
-    name: 'Сфинкс',
-    country: 'Канада',
-    size: 'medium',
-    coat: 'hairless',
-    weightMax: 5,
-    lifespan: '9–15 лет',
-    description: 'Бесшёрстная и очень общительная кошка, требующая регулярного ухода за кожей.',
-    kidsFriendly: true,
-    image: 'assets/images/sphynx.jpg'
-  },
-  {
-    id: 'bengal',
-    name: 'Бенгальская',
-    country: 'США',
-    size: 'medium',
-    coat: 'short',
-    weightMax: 7,
-    lifespan: '12–16 лет',
-    description: 'Активная и игривая порода с эффектным «леопардовым» окрасом.',
-    kidsFriendly: false,
-    image: 'assets/images/bengal.jpg'
-  },
-  {
-    id: 'abyssinian',
-    name: 'Абиссинская',
-    country: 'Эфиопия',
-    size: 'medium',
-    coat: 'short',
-    weightMax: 5,
-    lifespan: '12–15 лет',
-    description: 'Игривая и любопытная кошка с короткой шерстью и «диким» окрасом.',
-    kidsFriendly: false,
-    image: 'assets/images/abyssinian.jpg'
-  },
-  {
-    id: 'persian',
-    name: 'Персидская',
-    country: 'Иран',
-    size: 'medium',
-    coat: 'long',
-    weightMax: 6,
-    lifespan: '10–17 лет',
-    description: 'Роскошная длинная шерсть и спокойный нрав, но требует ежедневного вычёсывания.',
-    kidsFriendly: true,
-    image: 'assets/images/persian.jpg'
-  }
-];
-
-/* Ключ, под которым список пород хранится в localStorage */
-const STORAGE_KEY = 'kotolog.items.v1';
-
-
-/* Блок 2. Утилиты */
-
-/* SVG-заглушка через data-URI — если фото нет или оно не загрузилось */
+/* Заглушка для фото */
 const PLACEHOLDER_IMAGE =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
@@ -118,7 +14,7 @@ const PLACEHOLDER_IMAGE =
     </svg>`
   );
 
-/* Словари: технический код → русская подпись */
+/* Словари для перевода технических значений */
 const SIZE_LABELS = {
   small: 'малый',
   medium: 'средний',
@@ -132,59 +28,46 @@ const COAT_LABELS = {
   hairless: 'без шерсти'
 };
 
-/* Возвращает русскую подпись размера (или исходное значение) */
 function sizeLabel(size) {
   return SIZE_LABELS[size] || size;
 }
 
-/* Возвращает русскую подпись типа шерсти */
 function coatLabel(coat) {
   return COAT_LABELS[coat] || coat;
 }
 
 
-/* Блок 3. State и работа с localStorage */
+/* Блок 2. Состояние приложения (State) */
 
-/* Читает список пород из localStorage; при ошибке — дефолтные данные */
-function loadItemsFromStorage() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_ITEMS.map(item => ({ ...item }));
-
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return DEFAULT_ITEMS.map(item => ({ ...item }));
-    return parsed;
-  } catch (err) {
-    console.warn('Не удалось прочитать localStorage, загружены демо-данные.', err);
-    return DEFAULT_ITEMS.map(item => ({ ...item }));
-  }
-}
-
-/* Единый объект состояния — источник правды для всего приложения */
 const state = {
-  items: loadItemsFromStorage(),
+  items: [],             // Сюда загрузятся данные с сервера
   searchQuery: '',
   selectedSize: 'all',
   selectedCoat: 'all',
   sortBy: 'name-asc'
 };
 
-/* Сохраняет state.items в localStorage через JSON.stringify */
-function saveItems() {
+/* Функция загрузки данных с сервера (GET) */
+async function loadBreeds() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
-  } catch (err) {
-    console.warn('Не удалось сохранить в localStorage.', err);
+    const response = await fetch(API_URL);
+    if (!response.ok) throw new Error('Ошибка загрузки данных');
+
+    state.items = await response.json();
+    render(); // Перерисовываем интерфейс, когда данные пришли
+  } catch (error) {
+    console.error(error);
+    alert('Не удалось загрузить данные с сервера. Проверьте, запущен ли backend.');
   }
 }
 
 
-/* Блок 4. Производные данные: поиск + фильтр + сортировка */
+/* Блок 3. Производные данные: поиск + фильтр + сортировка (работает на клиенте) */
 
 function getVisibleItems() {
   const query = state.searchQuery.trim().toLowerCase();
 
-  /* Фильтрация по поиску (название/страна), размеру и типу шерсти */
+  /* Фильтр */
   const filtered = state.items.filter(item => {
     const matchesSearch =
       query === '' ||
@@ -200,7 +83,6 @@ function getVisibleItems() {
     return matchesSearch && matchesSize && matchesCoat;
   });
 
-  /* Копия массива */
   const sorted = [...filtered];
 
   /* Сортировка */
@@ -212,10 +94,10 @@ function getVisibleItems() {
       sorted.sort((a, b) => b.name.localeCompare(a.name, 'ru'));
       break;
     case 'weight-asc':
-      sorted.sort((a, b) => a.weightMax - b.weightMax);
+      sorted.sort((a, b) => (a.weight_max || 0) - (b.weight_max || 0));
       break;
     case 'weight-desc':
-      sorted.sort((a, b) => b.weightMax - a.weightMax);
+      sorted.sort((a, b) => (b.weight_max || 0) - (a.weight_max || 0));
       break;
     default:
       break;
@@ -224,7 +106,7 @@ function getVisibleItems() {
   return sorted;
 }
 
-/* Блок 5. Ссылки на DOM-элементы */
+/* Блок 4. Ссылки на DOM-элементы */
 
 const cardsContainer = document.getElementById('cards');
 const filterCountEl = document.getElementById('filter-count');
@@ -246,12 +128,11 @@ const imagePreviewImg = document.getElementById('image-preview-img');
 const imageRemoveBtn = document.getElementById('image-remove');
 
 
-/* Блок 5.1. Работа с фото в форме */
+/* Блок 5. Работа с фото в форме (перевод в Base64 для отправки на сервер) */
 
 const MAX_IMAGE_SIZE = 1024 * 1024; // 1 МБ
-let currentImageDataUrl = '';       // сюда кладётся прочитанная картинка
+let currentImageDataUrl = '';
 
-/* Проверяет файл, читает как Data URL и показывает превью */
 function handleImageSelect(file) {
   clearImageError();
 
@@ -290,7 +171,6 @@ function handleImageSelect(file) {
   reader.readAsDataURL(file);
 }
 
-/* Сбрасывает превью и сохранённый Data URL */
 function resetImagePreview() {
   currentImageDataUrl = '';
   imagePreviewImg.removeAttribute('src');
@@ -298,36 +178,33 @@ function resetImagePreview() {
   imageInput.value = '';
 }
 
-/* Снимает ошибку с поля загрузки файла */
 function clearImageError() {
   imageInput.classList.remove('is-invalid');
   const target = form.querySelector('[data-error-for="f-image"]');
   if (target) target.textContent = '';
 }
 
-/* Пользователь выбрал файл */
 imageInput.addEventListener('change', e => {
   const file = e.target.files && e.target.files[0];
   handleImageSelect(file);
 });
 
-/* Кнопка «Удалить фото» */
 imageRemoveBtn.addEventListener('click', () => {
   resetImagePreview();
 });
 
 
-/* Блок 6. Render — отрисовка карточек по state */
+/* Блок 6. Render — отрисовка карточек */
 
-/* Создаёт DOM-элемент одной карточки породы */
 function createCardElement(item) {
   const card = document.createElement('article');
   card.className = 'card';
   card.dataset.id = item.id;
 
-  /* Картинка породы (или заглушка при ошибке загрузки) */
+  /* Картинка породы */
   const img = document.createElement('img');
-  img.src = item.image || PLACEHOLDER_IMAGE;
+  // Бэкенд возвращает image_url, но на всякий случай проверяем и image
+  img.src = item.image_url || item.image || PLACEHOLDER_IMAGE;
   img.alt = item.name;
   img.loading = 'lazy';
   img.addEventListener('error', () => {
@@ -335,25 +212,23 @@ function createCardElement(item) {
   });
   card.appendChild(img);
 
-  /* Название */
   const title = document.createElement('h3');
   title.textContent = item.name;
   card.appendChild(title);
 
-  /* Описание */
   const desc = document.createElement('p');
   desc.textContent = item.description;
   card.appendChild(desc);
 
-  /* Список характеристик */
   const props = document.createElement('ul');
   props.className = 'card-props';
 
+  // Бэкенд отдает weight_max и kids_friendly, поэтому используем их
   const rows = [
     ['Страна', item.country],
     ['Размер', sizeLabel(item.size)],
     ['Шерсть', coatLabel(item.coat)],
-    ['Вес', `до ${item.weightMax} кг`],
+    ['Вес', `до ${item.weight_max || item.weightMax || 0} кг`],
     ['Жизнь', item.lifespan || '—']
   ];
 
@@ -368,18 +243,36 @@ function createCardElement(item) {
 
   card.appendChild(props);
 
-  /* Кнопка удаления с data-action="delete" — её ловит делегирование */
+  // Контейнер для кнопок (Изменить и Удалить)
+  const btnContainer = document.createElement('div');
+  btnContainer.style.display = 'flex';
+  btnContainer.style.justifyContent = 'flex-end';
+  btnContainer.style.gap = '10px';
+  btnContainer.style.marginTop = '0.75rem';
+
+  // Кнопка изменения
+  const editBtn = document.createElement('button');
+  editBtn.type = 'button';
+  editBtn.className = 'card__delete'; // Используем те же стили, что и для удаления
+  editBtn.dataset.action = 'edit';
+  editBtn.textContent = 'Изменить';
+  editBtn.style.color = 'var(--accent-darker)';
+  editBtn.style.borderColor = 'var(--accent-darker)';
+  btnContainer.appendChild(editBtn);
+
+  // Кнопка удаления
   const deleteBtn = document.createElement('button');
   deleteBtn.type = 'button';
   deleteBtn.className = 'card__delete';
   deleteBtn.dataset.action = 'delete';
   deleteBtn.textContent = 'Удалить';
-  card.appendChild(deleteBtn);
+  btnContainer.appendChild(deleteBtn);
+
+  card.appendChild(btnContainer);
 
   return card;
 }
 
-/* Полная перерисовка контейнера карточек по актуальному state */
 function render() {
   const items = getVisibleItems();
 
@@ -388,19 +281,14 @@ function render() {
   if (items.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty';
-    empty.textContent =
-      state.items.length === 0
-        ? 'Каталог пуст. Добавьте первую породу кнопкой «Добавить породу».'
-        : 'Ничего не найдено. Попробуйте изменить условия поиска.';
+    empty.textContent = 'Ничего не найдено или база данных пуста. Добавьте породу!';
     cardsContainer.appendChild(empty);
   } else {
-    /* Карточки собираем в фрагмент — вставляем в DOM одним движением */
     const fragment = document.createDocumentFragment();
     items.forEach(item => fragment.appendChild(createCardElement(item)));
     cardsContainer.appendChild(fragment);
   }
 
-  /* Счётчик найденного */
   const total = state.items.length;
   const shown = items.length;
   filterCountEl.textContent =
@@ -409,8 +297,7 @@ function render() {
       : `Найдено: ${shown} из ${total}`;
 }
 
-
-/* Блок 7. Обработчики поиска, фильтров, сортировки, сброса */
+/* Блок 7. Обработчики поиска, фильтров, сортировки, сброса (работают локально) */
 
 searchInput.addEventListener('input', e => {
   state.searchQuery = e.target.value;
@@ -432,7 +319,6 @@ sortSelect.addEventListener('change', e => {
   render();
 });
 
-/* Сброс всех фильтров к значениям по умолчанию */
 resetButton.addEventListener('click', () => {
   state.searchQuery = '';
   state.selectedSize = 'all';
@@ -447,33 +333,63 @@ resetButton.addEventListener('click', () => {
   render();
 });
 
+/* Блок 8. Удаление и Изменение (DELETE и PATCH) */
 
-/* Блок 8. Удаление */
-
-cardsContainer.addEventListener('click', e => {
-  const deleteBtn = e.target.closest('[data-action="delete"]');
-  if (!deleteBtn) return;
-
-  const card = deleteBtn.closest('.card');
+cardsContainer.addEventListener('click', async e => {
+  const card = e.target.closest('.card');
   if (!card) return;
 
   const id = card.dataset.id;
 
-  const item = state.items.find(i => i.id === id);
-  if (!item) return;
+  // Обработка кнопки "Изменить"
+  const editBtn = e.target.closest('[data-action="edit"]');
+  if (editBtn) {
+    const item = state.items.find(i => String(i.id) === String(id));
+    if (!item) return;
 
-  if (!window.confirm(`Удалить «${item.name}» из каталога?`)) return;
+    // Спрашиваем новое название (обновляем хотя бы одно поле - name)
+    const newName = prompt('Введите новое название для породы:', item.name);
 
-  /* Иммутабельное удаление: новый массив без удаляемой породы */
-  state.items = state.items.filter(i => i.id !== id);
-  saveItems();
-  render();
+    if (!newName || newName.trim() === '' || newName === item.name) return;
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName.trim() })
+      });
+
+      if (!response.ok) throw new Error('Ошибка обновления');
+      await loadBreeds(); // Обновляем данные с сервера
+    } catch (err) {
+      alert('Не удалось обновить название');
+    }
+    return;
+  }
+
+  // Обработка кнопки "Удалить"
+  const deleteBtn = e.target.closest('[data-action="delete"]');
+  if (deleteBtn) {
+    if (!window.confirm('Удалить эту породу из базы данных?')) return;
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok || response.status === 204) {
+        await loadBreeds(); // Обновляем данные с сервера
+      } else {
+        throw new Error('Ошибка удаления');
+      }
+    } catch (err) {
+      alert('Ошибка при удалении породы');
+    }
+  }
 });
-
 
 /* Блок 9. Модальное окно: открытие и закрытие */
 
-/* Запоминаем, куда вернуть фокус после закрытия */
 let lastFocusedElement = null;
 
 function openModal() {
@@ -495,23 +411,18 @@ function closeModal() {
   }
 }
 
-/* Кнопка «Добавить новую породу» */
 addButton.addEventListener('click', openModal);
 
-/* Делегирование: клик по элементу с data-close закрывает модалку */
 modal.addEventListener('click', e => {
   if (e.target.closest('[data-close]')) closeModal();
 });
 
-/* Escape закрывает модалку, если она открыта */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !modal.hidden) closeModal();
 });
 
+/* Блок 10. Валидация формы */
 
-/* Блок 10. Клиентская валидация формы */
-
-/* Убирает все сообщения об ошибках и красные подсветки */
 function clearErrors() {
   form.querySelectorAll('.error').forEach(el => {
     el.textContent = '';
@@ -521,14 +432,12 @@ function clearErrors() {
   });
 }
 
-/* Показывает ошибку у конкретного поля */
 function showError(input, message) {
   input.classList.add('is-invalid');
   const target = form.querySelector(`[data-error-for="${input.id}"]`);
   if (target) target.textContent = message;
 }
 
-/* Проверяет одно поле через input.validity */
 function validateField(input) {
   if (input.validity.valid) return true;
 
@@ -544,31 +453,23 @@ function validateField(input) {
     showError(input, `Значение не больше ${input.max}`);
   } else if (input.validity.badInput) {
     showError(input, 'Введите число');
-  } else if (input.validity.stepMismatch) {
-    showError(input, 'Недопустимый шаг значения');
   } else {
     showError(input, 'Проверьте значение');
   }
-
   return false;
 }
 
-/* Проверяет всю форму; true — если все поля валидны */
 function validateForm() {
   clearErrors();
   let valid = true;
-
   const inputs = form.querySelectorAll('input, select, textarea');
-
   inputs.forEach(input => {
     if (input.type === 'checkbox' || input.disabled) return;
     if (!validateField(input)) valid = false;
   });
-
   return valid;
 }
 
-/* Снимаем ошибку, как только пользователь исправил поле */
 form.addEventListener('input', e => {
   const input = e.target;
   if (!input.classList.contains('is-invalid')) return;
@@ -580,18 +481,18 @@ form.addEventListener('input', e => {
 });
 
 
-/* Блок 11. Отправка формы — добавление новой породы */
+/* Блок 11. Отправка формы — добавление новой породы (POST) */
 
-form.addEventListener('submit', e => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
 
   if (!validateForm()) return;
 
   const data = new FormData(form);
 
-  /* Собираем объект новой породы из данных формы */
+  // Собираем объект новой породы.
+  // Отправляем поля с именами, которые ожидает Pydantic (weightMax, kidsFriendly, image)
   const newItem = {
-    id: 'breed-' + Date.now(),
     name: String(data.get('name')).trim(),
     country: String(data.get('country')).trim(),
     size: String(data.get('size')),
@@ -600,24 +501,33 @@ form.addEventListener('submit', e => {
     lifespan: String(data.get('lifespan') || '').trim() || '—',
     description: String(data.get('description')).trim(),
     kidsFriendly: data.get('kidsFriendly') === 'on',
-    image: currentImageDataUrl || PLACEHOLDER_IMAGE
+    image: currentImageDataUrl || '' // Если фото нет, отправляем пустую строку
   };
 
-  /* Иммутабельное добавление в начало массива */
-  state.items = [newItem, ...state.items];
-  saveItems();
-  render();
-  closeModal();
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newItem)
+    });
 
-  /* Прокручиваем к карточкам, чтобы пользователь увидел результат */
-  const breedsSection = document.getElementById('breeds');
-  if (breedsSection) {
-    breedsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!response.ok) throw new Error('Ошибка создания');
+
+    closeModal();
+    await loadBreeds(); // Перезапрашиваем данные с сервера
+
+    // Прокручиваем к карточкам
+    const breedsSection = document.getElementById('breeds');
+    if (breedsSection) {
+      breedsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  } catch (err) {
+    alert('Ошибка при добавлении породы. Проверьте корректность данных.');
+    console.error(err);
   }
 });
 
-
-/* Блок 12. Scroll-spy — подсветка активного пункта меню */
+/* Блок 12. Подсветка активного пункта меню */
 
 (function initScrollSpy() {
   const links = Array.from(document.querySelectorAll('.main-nav a[href^="#"]'));
@@ -627,7 +537,6 @@ form.addEventListener('submit', e => {
 
   if (sections.length === 0) return;
 
-  /* Определяет текущую секцию и ставит .is-active на нужную ссылку */
   function setActive() {
     const probe = window.scrollY + 140;
     let current = sections[0];
@@ -650,6 +559,6 @@ form.addEventListener('submit', e => {
 })();
 
 
-/* Блок 13. Первая отрисовка при загрузке страницы */
-
-render();
+/* Блок 13. Инициализация при загрузке страницы */
+// Запускаем загрузку данных с бэкенда
+loadBreeds();
